@@ -1,0 +1,108 @@
+@model BookAppointmentViewModel
+@{
+    ViewData["Title"] = "Book Appointment";
+    var selectedTime = Model.AppointmentTime?.ToString(@"hh\:mm");
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <a asp-controller="Doctors" asp-action="Index" class="text-decoration-none small">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Back to doctors
+        </a>
+
+        <div class="card form-card mt-3">
+            <div class="card-body p-4 p-md-5">
+                <div class="d-flex align-items-center gap-3 mb-4 pb-4 border-bottom">
+                    <img src="@Model.Doctor!.ImageUrl" alt="Portrait of @Model.Doctor.Name" class="doctor-avatar" />
+                    <div>
+                        <h1 class="h4 fw-bold mb-1">Book with @Model.Doctor.Name</h1>
+                        <span class="badge specialty-badge">@Model.Doctor.Specialization</span>
+                    </div>
+                </div>
+
+                <form asp-action="Book" method="post" novalidate>
+                    <input type="hidden" asp-for="DoctorId" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="PatientName" class="form-label fw-semibold"></label>
+                        <input asp-for="PatientName" class="form-control" placeholder="Full name" autocomplete="name" />
+                        <span asp-validation-for="PatientName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="AppointmentDate" class="form-label fw-semibold"></label>
+                            <input asp-for="AppointmentDate" type="date" class="form-control"
+                                   min="@DateTime.Today.ToString("yyyy-MM-dd")" aria-describedby="dateHelp" />
+                            <div id="dateHelp" class="form-text">Sunday to Thursday only.</div>
+                            <span asp-validation-for="AppointmentDate" class="text-danger small" id="dateError"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="AppointmentTime" class="form-label fw-semibold"></label>
+                            <select asp-for="AppointmentTime" class="form-select">
+                                <option value="">Select a time slot</option>
+                                @foreach (var slot in Model.TimeSlots)
+                                {
+                                    var value = slot.ToString(@"hh\:mm");
+                                    <option value="@value" selected="@(value == selectedTime)">@ScheduleRules.Format(slot)</option>
+                                }
+                            </select>
+                            <div class="form-text">Booked slots are disabled automatically.</div>
+                            <span asp-validation-for="AppointmentTime" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                        <i class="bi bi-check2-circle me-1" aria-hidden="true"></i>Confirm Appointment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const doctorId = @Model.DoctorId;
+            const dateInput = document.getElementById('AppointmentDate');
+            const timeSelect = document.getElementById('AppointmentTime');
+            const dateError = document.getElementById('dateError');
+
+            function isWorkingDay(value) {
+                const day = new Date(value + 'T00:00:00').getDay(); // 5 = Fri, 6 = Sat
+                return day !== 5 && day !== 6;
+            }
+
+            async function refreshSlots() {
+                const value = dateInput.value;
+                Array.from(timeSelect.options).forEach(o => { o.disabled = false; o.textContent = o.textContent.replace(' (Booked)', ''); });
+                if (!value) return;
+
+                if (!isWorkingDay(value)) {
+                    dateError.textContent = 'Appointments are available Sunday to Thursday only.';
+                    dateInput.classList.add('is-invalid');
+                    return;
+                }
+                dateError.textContent = '';
+                dateInput.classList.remove('is-invalid');
+
+                const res = await fetch(`/Appointments/BookedSlots?doctorId=${doctorId}&date=${value}`);
+                if (!res.ok) return;
+                const booked = await res.json();
+                Array.from(timeSelect.options).forEach(o => {
+                    if (booked.includes(o.value)) {
+                        o.disabled = true;
+                        o.textContent += ' (Booked)';
+                        if (o.selected) timeSelect.value = '';
+                    }
+                });
+            }
+
+            dateInput.addEventListener('change', refreshSlots);
+            refreshSlots();
+        })();
+    </script>
+}

@@ -1,0 +1,113 @@
+:root {
+    --bs-primary: #0f766e;
+    --bs-primary-rgb: 15, 118, 110;
+    --bs-body-font-family: "Inter", system-ui, sans-serif;
+    --bs-body-bg: #f6f8f8;
+    --bs-link-color: #0f766e;
+    --bs-link-hover-color: #115e59;
+}
+
+.btn-primary {
+    --bs-btn-bg: #0f766e;
+    --bs-btn-border-color: #0f766e;
+    --bs-btn-hover-bg: #115e59;
+    --bs-btn-hover-border-color: #115e59;
+    --bs-btn-active-bg: #134e4a;
+    --bs-btn-active-border-color: #134e4a;
+    --bs-btn-disabled-bg: #0f766e;
+    --bs-btn-disabled-border-color: #0f766e;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #0f766e;
+    --bs-btn-border-color: #0f766e;
+    --bs-btn-hover-bg: #0f766e;
+    --bs-btn-hover-border-color: #0f766e;
+    --bs-btn-active-bg: #115e59;
+    --bs-btn-active-border-color: #115e59;
+}
+
+.pagination {
+    --bs-pagination-color: #0f766e;
+    --bs-pagination-active-bg: #0f766e;
+    --bs-pagination-active-border-color: #0f766e;
+    --bs-pagination-focus-box-shadow: 0 0 0 .25rem rgba(15, 118, 110, .25);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #5eead4;
+    box-shadow: 0 0 0 .25rem rgba(15, 118, 110, .2);
+}
+
+.text-primary { color: #0f766e !important; }
+.text-balance { text-wrap: balance; }
+
+.brand-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: .5rem;
+    background: #0f766e;
+    color: #fff;
+}
+
+.nav-link { font-weight: 500; }
+
+.hero {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #ffffff 100%);
+    border: 1px solid #d1fae5;
+}
+
+.hero-img { aspect-ratio: 4 / 3; object-fit: cover; }
+
+.info-card, .filter-bar, .form-card, .table-card, .empty-state {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+}
+
+.info-card { padding: 1.5rem; }
+.filter-bar { padding: 1rem; margin-inline: 0; }
+
+.doctor-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.doctor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, .08);
+}
+
+.doctor-card .card-img-top {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: #e6f4f1;
+}
+
+.specialty-badge {
+    background: #ccfbf1;
+    color: #115e59;
+    font-weight: 500;
+}
+
+.doctor-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.table-card { overflow: hidden; }
+.table thead th {
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    font-weight: 600;
+}
+.table td, .table th { padding: 1rem 1.25rem; }
